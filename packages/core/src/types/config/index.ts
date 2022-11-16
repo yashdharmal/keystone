@@ -8,7 +8,6 @@ import type { Options as BodyParserOptions } from 'body-parser';
 
 import type { AssetMode, BaseKeystoneTypeInfo, KeystoneContext, DatabaseProvider } from '..';
 
-import { SessionStrategy } from '../session';
 import type { MaybePromise } from '../utils';
 import type {
   ListSchemaConfig,
@@ -99,7 +98,7 @@ export type KeystoneConfig<TypeInfo extends BaseKeystoneTypeInfo = BaseKeystoneT
   lists: ListSchemaConfig;
   ui?: AdminUIConfig<TypeInfo>;
   server?: ServerConfig<TypeInfo>;
-  session?: SessionStrategy<any>;
+  getSession?: (args: { context: KeystoneContext<TypeInfo> }) => Promise<unknown | undefined>;
   types?: {
     path?: string;
   };
