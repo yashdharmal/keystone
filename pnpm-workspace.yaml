@@ -2,6 +2,7 @@ packages:
   - 'design-system/packages/*'
   - 'design-system/website'
   - 'docs'
+  - 'kdocs'
   - 'examples/**'
   - 'packages/*'
   - 'tests/admin-ui-tests'

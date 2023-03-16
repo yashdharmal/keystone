@@ -1,0 +1,23 @@
+{
+  "name": "@keystone-6/website",
+  "version": "0.2.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "SHOW_NEXT_RELEASE=1 next dev -p 8000",
+    "dev:live": "next dev -p 8000",
+    "build": "next build",
+    "start": "next start -p 8000"
+  },
+  "dependencies": {
+    "@keystatic/core": "^0.0.80",
+    "@keystatic/next": "^0.0.6",
+    "next": "13.2.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.0.0"
+  },
+  "repository": "https://github.com/keystonejs/keystone/tree/main/docs"
+}
