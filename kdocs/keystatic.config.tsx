@@ -34,27 +34,23 @@ export default config({
         title: fields.slug({
           name: {
             label: 'Title',
-            validation: {
-              length: {
-                min: 1,
-              },
-            },
+            validation: { length: { min: 1 } },
           },
         }),
-        summary: fields.text({
+        description: fields.text({
           label: 'Summary',
           validation: { length: { min: 4 } },
-        }),
-        publishedDate: fields.date({ label: 'Published Date' }),
-        images: fields.array({
-          ...fields.object({
-            image: fields.image({ label: 'Image', directory: 'public' }),
-            alt: fields.text({ label: 'Alt text' }),
-          }),
         }),
         content: fields.document({
           label: 'Content',
           formatting: true,
+        }),
+        related: fields.array({
+          ...fields.object({
+            heading: fields.text({ label: 'Heading' }),
+            href: fields.text({ label: 'href' }),
+            description: fields.text({ label: 'Description' }),
+          }),
         }),
       },
     }),
