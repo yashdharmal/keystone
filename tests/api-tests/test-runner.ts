@@ -9,7 +9,7 @@ import {
   parseEnvValue,
   printConfigWarnings,
 } from '@prisma/internals';
-import { getPrismaClient, objectEnumValues } from '@prisma/client/runtime/library';
+import { DMMF, getPrismaClient, objectEnumValues } from '@prisma/client/runtime/library';
 // @ts-ignore
 import { externalToInternalDmmf } from '@prisma/client/generator-build';
 import { initConfig, createSystem } from '@keystone-6/core/system';
@@ -32,6 +32,25 @@ export type TestEnv<TypeInfo extends BaseKeystoneTypeInfo> = {
   disconnect: () => Promise<void>;
   testArgs: TestArgs<TypeInfo>;
 };
+
+// TODO: we should find a better way to do this
+function dmmfToRuntimeDataModel(dmmfDataModel: DMMF.Datamodel) {
+  return {
+    models: buildMapForRuntime(dmmfDataModel.models),
+    enums: buildMapForRuntime(dmmfDataModel.enums),
+    types: buildMapForRuntime(dmmfDataModel.types),
+  };
+}
+
+function buildMapForRuntime<T extends { name: string }>(
+  list: T[]
+): Record<string, Omit<T, 'name'>> {
+  const result: Record<string, Omit<T, 'name'>> = {};
+  for (const { name, ...rest } of list) {
+    result[name] = rest;
+  }
+  return result;
+}
 
 // you could call this a memory leak but it ends up being fine
 // because we're only going to run this on a reasonably small number of schemas and then exit
@@ -70,9 +89,10 @@ async function getTestPrismaModule(schema: string): Promise<PrismaModule> {
   const document = externalToInternalDmmf(
     await getDMMF({ datamodel: schema, previewFeatures: [] })
   );
+
   const activeProvider = config.datasources[0].activeProvider;
   const options: Parameters<typeof getPrismaClient>[0] = {
-    document,
+    runtimeDataModel: dmmfToRuntimeDataModel(document.datamodel),
     generator,
     dirname: prismaSchemaDirectory,
     relativePath: '',
