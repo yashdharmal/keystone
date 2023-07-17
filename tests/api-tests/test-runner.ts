@@ -9,7 +9,7 @@ import {
   parseEnvValue,
   printConfigWarnings,
 } from '@prisma/internals';
-import { DMMF, getPrismaClient, objectEnumValues } from '@prisma/client/runtime/library';
+import { getPrismaClient, objectEnumValues } from '@prisma/client/runtime/library';
 // @ts-ignore
 import { externalToInternalDmmf } from '@prisma/client/generator-build';
 import { initConfig, createSystem } from '@keystone-6/core/system';
@@ -33,15 +33,14 @@ export type TestEnv<TypeInfo extends BaseKeystoneTypeInfo> = {
   testArgs: TestArgs<TypeInfo>;
 };
 
-// TODO: we should find a better way to do this
-function dmmfToRuntimeDataModel(dmmfDataModel: DMMF.Datamodel) {
-  return {
-    models: buildMapForRuntime(dmmfDataModel.models),
-    enums: buildMapForRuntime(dmmfDataModel.enums),
-    types: buildMapForRuntime(dmmfDataModel.types),
-  };
-}
+// you could call this a memory leak but it ends up being fine
+// because we're only going to run this on a reasonably small number of schemas and then exit
+const generatedPrismaModules = new Map<string, PrismaModule>();
 
+// a modified version of https://github.com/prisma/prisma/blob/bbdf1c23653a77b0b5bf7d62efd243dcebea018b/packages/client/src/utils/getTestClient.ts
+// yes, it's totally relying on implementation details
+// we're okay with that because otherwise the performance of our tests is very bad
+// TODO: we should find a better way to do this
 function buildMapForRuntime<T extends { name: string }>(
   list: T[]
 ): Record<string, Omit<T, 'name'>> {
@@ -52,13 +51,17 @@ function buildMapForRuntime<T extends { name: string }>(
   return result;
 }
 
-// you could call this a memory leak but it ends up being fine
-// because we're only going to run this on a reasonably small number of schemas and then exit
-const generatedPrismaModules = new Map<string, PrismaModule>();
+async function schemaToRuntimeDataModel(schema: string): Promise<any> {
+  const dmmfDataModel = externalToInternalDmmf(
+    await getDMMF({ datamodel: schema, previewFeatures: [] })
+  );
+  return {
+    models: buildMapForRuntime(dmmfDataModel.models),
+    enums: buildMapForRuntime(dmmfDataModel.enums),
+    types: buildMapForRuntime(dmmfDataModel.types),
+  };
+}
 
-// a modified version of https://github.com/prisma/prisma/blob/bbdf1c23653a77b0b5bf7d62efd243dcebea018b/packages/client/src/utils/getTestClient.ts
-// yes, it's totally relying on implementation details
-// we're okay with that because otherwise the performance of our tests is very bad
 const tmpdir = os.tmpdir();
 
 const prismaSchemaDirectory = path.join(tmpdir, Math.random().toString(36).slice(2));
@@ -86,13 +89,9 @@ async function getTestPrismaModule(schema: string): Promise<PrismaModule> {
 
   const generator = config.generators.find(g => parseEnvValue(g.provider) === 'prisma-client-js');
 
-  const document = externalToInternalDmmf(
-    await getDMMF({ datamodel: schema, previewFeatures: [] })
-  );
-
   const activeProvider = config.datasources[0].activeProvider;
   const options: Parameters<typeof getPrismaClient>[0] = {
-    runtimeDataModel: dmmfToRuntimeDataModel(document.datamodel),
+    runtimeDataModel: await schemaToRuntimeDataModel(schema),
     generator,
     dirname: prismaSchemaDirectory,
     relativePath: '',
