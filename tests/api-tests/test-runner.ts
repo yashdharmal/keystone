@@ -52,13 +52,13 @@ function buildMapForRuntime<T extends { name: string }>(
 }
 
 async function schemaToRuntimeDataModel(schema: string): Promise<any> {
-  const dmmfDataModel = externalToInternalDmmf(
+  const { datamodel } = externalToInternalDmmf(
     await getDMMF({ datamodel: schema, previewFeatures: [] })
   );
   return {
-    models: buildMapForRuntime(dmmfDataModel.models),
-    enums: buildMapForRuntime(dmmfDataModel.enums),
-    types: buildMapForRuntime(dmmfDataModel.types),
+    models: buildMapForRuntime(datamodel.models),
+    enums: buildMapForRuntime(datamodel.enums),
+    types: buildMapForRuntime(datamodel.types),
   };
 }
 
