@@ -1,5 +1,11 @@
 # @keystone-6/cloudinary
 
+## 7.0.1
+
+### Patch Changes
+
+- [#8648](https://github.com/keystonejs/keystone/pull/8648) [`d848e7d07`](https://github.com/keystonejs/keystone/commit/d848e7d07e01a6805db978c665d438ff3fc9dd78) Thanks [@dcousens](https://github.com/dcousens)! - Use cuid2 for unique identifiers, not cuid
+
 ## 7.0.0
 
 ### Patch Changes

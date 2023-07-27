@@ -1,5 +1,29 @@
 # @keystone-6/core
 
+## 5.4.0
+
+### Minor Changes
+
+- [#8648](https://github.com/keystonejs/keystone/pull/8648) [`d848e7d07`](https://github.com/keystonejs/keystone/commit/d848e7d07e01a6805db978c665d438ff3fc9dd78) Thanks [@dcousens](https://github.com/dcousens)! - Adds arbitrary string identifier support as `db: { idField: { kind: 'string' }`
+
+* [#8648](https://github.com/keystonejs/keystone/pull/8648) [`d848e7d07`](https://github.com/keystonejs/keystone/commit/d848e7d07e01a6805db978c665d438ff3fc9dd78) Thanks [@dcousens](https://github.com/dcousens)! - Adds cuid2 identifier support as `db: { idField: { kind: 'cuid2' }`
+
+- [#8648](https://github.com/keystonejs/keystone/pull/8648) [`d848e7d07`](https://github.com/keystonejs/keystone/commit/d848e7d07e01a6805db978c665d438ff3fc9dd78) Thanks [@dcousens](https://github.com/dcousens)! - Add support for unique filters to filter by more than 1 unique value
+
+* [#8648](https://github.com/keystonejs/keystone/pull/8648) [`d848e7d07`](https://github.com/keystonejs/keystone/commit/d848e7d07e01a6805db978c665d438ff3fc9dd78) Thanks [@dcousens](https://github.com/dcousens)! - Allows developers to upgrade `idField` types by not rejecting invalid identifiers in resolvers
+
+- [#8648](https://github.com/keystonejs/keystone/pull/8648) [`d848e7d07`](https://github.com/keystonejs/keystone/commit/d848e7d07e01a6805db978c665d438ff3fc9dd78) Thanks [@dcousens](https://github.com/dcousens)! - Adds support for querying Singletons by non-default identifiers
+
+* [#8686](https://github.com/keystonejs/keystone/pull/8686) [`6832adea1`](https://github.com/keystonejs/keystone/commit/6832adea15fd35f08b62313d875b95f79ef68b0f) Thanks [@borisno2](https://github.com/borisno2)! - Changes session secret to a secure random default when not provided
+
+- [#8644](https://github.com/keystonejs/keystone/pull/8644) [`d75288c77`](https://github.com/keystonejs/keystone/commit/d75288c77ec47a27811458563801297626584ec2) Thanks [@renovate](https://github.com/apps/renovate)! - Upgrade Prisma version to `4.16.2`
+
+### Patch Changes
+
+- [#8696](https://github.com/keystonejs/keystone/pull/8696) [`57db80ea4`](https://github.com/keystonejs/keystone/commit/57db80ea4f655e4694080bfadd69ff4ca9356ed5) Thanks [@dcousens](https://github.com/dcousens)! - Fixes misleading error when `db.url` is `undefined`
+
+* [#8648](https://github.com/keystonejs/keystone/pull/8648) [`d848e7d07`](https://github.com/keystonejs/keystone/commit/d848e7d07e01a6805db978c665d438ff3fc9dd78) Thanks [@dcousens](https://github.com/dcousens)! - Fixes GraphQL errors revealing the exact identifier format required when an unknown identifier is provided
+
 ## 5.3.2
 
 ### Patch Changes
